@@ -1,0 +1,30 @@
+# editorconfig.org
+
+# 顶层配置，适用于所有文件
+root = true
+
+# 所有文件使用utf-8编码
+[*]
+charset = utf-8
+
+# 使用2个空格缩进
+[*.{js,ts,css,html,md}]
+indent_style = space
+indent_size = 2
+
+# 对于Python文件，使用4个空格缩进
+[*.py]
+indent_style = space
+indent_size = 2
+
+# 删除行尾的空格和制表符
+[*]
+trim_trailing_whitespace = true
+
+# 使用LF作为换行符
+[*]
+end_of_line = lf
+
+# 在文件末尾插入一个空行
+[*]
+insert_final_newline = true
