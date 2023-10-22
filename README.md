@@ -1,0 +1,2 @@
+# newlog
+Static blog generator
