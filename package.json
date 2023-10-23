@@ -1,0 +1,20 @@
+{
+  "name": "newlog-py",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "parcel watch ./frontend/index.js --dist-dir ./static",
+    "build": "parcel build ./frontend/index.js --dist-dir ./static"
+  },
+  "default": "index.js",
+  "repository": "git@gitee.com:shiweifu/newlog-py.git",
+  "author": "shiweifu <shiweifu@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.10.0"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss-cli": "^10.1.0",
+    "tailwindcss": "^3.3.3"
+  }
+}

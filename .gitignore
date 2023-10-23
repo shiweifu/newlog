@@ -162,3 +162,7 @@ cython_debug/
 data/
 tmp_data/
 .idea/
+static/index.css*
+static/index.js*
+node_modules/
+.parcel-cache/
