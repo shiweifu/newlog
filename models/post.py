@@ -81,3 +81,19 @@ class Post:
 
   def __str__(self):
     return f"<Post {self._post_path}>"
+
+  def serialize(self):
+    return {
+      'post_path': self._post_path,
+      'category': self._category,
+      'date': self._frontmatter.get('date', ''),
+      'title': self._frontmatter.get('title', ''),
+      'html': self._html,
+      'raw_md': self._raw_md
+    }
+
+  def __dict__(self):
+    return self.serialize()
+
+  def __iter__(self):
+    return iter(self.serialize().items())

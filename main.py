@@ -1,6 +1,7 @@
 import os
 
 from models.post import Post
+from flask import Flask, jsonify, request, render_template
 
 
 class Engine:
@@ -46,5 +47,21 @@ def run():
     print(e)
 
 
+def server():
+  #   run a flask web server
+  app = Flask(__name__)
+
+  @app.route("/api/posts", methods=["GET"])
+  def get_posts():
+    return jsonify([dict(post) for post in engine._posts])
+
+  @app.route("/")
+  def index():
+    return render_template("index.html", posts=engine._posts)
+
+  app.run(debug=True, port=5050)
+
+
 if __name__ == '__main__':
   run()
+  server()
