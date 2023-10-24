@@ -7,7 +7,7 @@ import os
 class Post:
   def __init__(self, post_path, category=""):
     self._post_path = post_path
-    self._category = category
+    self._local_category = category
     self._frontmatter = {}
     self._html = ""
     self._raw_md = ""
@@ -57,7 +57,7 @@ class Post:
     frontmatter = {}
     frontmatter["title"] = os.path.basename(self._post_path).replace(".md", "")
     frontmatter["date"] = datetime.datetime.now().strftime("%Y-%m-%d")
-    frontmatter["category"] = self._category
+    frontmatter["category"] = self._local_category
 
     if len(content_parts) > 2 and content_parts[0].strip() == "":
       # 读取 frontmatter
@@ -85,12 +85,21 @@ class Post:
   def serialize(self):
     return {
       'post_path': self._post_path,
-      'category': self._category,
+      'category': self.category(),
       'date': self._frontmatter.get('date', ''),
-      'title': self._frontmatter.get('title', ''),
+      'title': self.title(),
       'html': self._html,
       'raw_md': self._raw_md
     }
+
+  def url(self):
+    return f"/posts/{self.category()}/{os.path.basename(self._post_path).replace('.md', '')}"
+
+  def title(self):
+    return self._frontmatter.get('title', '')
+
+  def category(self):
+    return self._frontmatter.get('category', '')
 
   def __dict__(self):
     return self.serialize()

@@ -1,0 +1,13 @@
+{#{{ 遍历categories }}#}
+{% for category in categories %}
+  <li class="nav-item">
+    <p class="nav-link">{{ category }}</p>
+  </li>
+  {#  {{ 遍历对应分类的 posts }}#}
+  {% for post in categories_and_posts[category] %}
+    <li class="nav-item">
+      <a class="nav-link" href="{{ post.url() }}">{{ post.title() }}</a>
+    </li>
+  {% endfor %}
+{% endfor %}
+{#{{ 遍历categories结束 }}#}
