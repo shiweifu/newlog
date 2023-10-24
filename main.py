@@ -1,5 +1,11 @@
+import time
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
+
 from lib.engine import Engine
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, render_template
+
+engine: Engine
 
 
 def run():
@@ -24,7 +30,6 @@ def server():
 
   @app.route("/archive", methods=["GET"])
   def archive():
-    print(engine.categories())
     return render_template("archive.html",
                            categories=engine.categories(),
                            categories_and_posts=engine.categories_and_posts())
@@ -40,6 +45,40 @@ def server():
   app.run(debug=True, port=5050)
 
 
+class MyHandler(FileSystemEventHandler):
+
+  def __init__(self):
+    self._last_trigger_time = time.time()
+
+  def process(self):
+    global engine
+    engine.reload_data()
+
+  def on_modified(self, event):
+    if event.is_directory:
+      return
+
+    current_time = time.time()
+    if event.src_path.find('~') == -1 and (current_time - self._last_trigger_time) > 1:
+      self._last_trigger_time = current_time
+      self.process()
+
+  def on_deleted(self, event):
+    if event.is_directory:
+      return
+
+    if event.src_path.find('~') == -1:
+      self.process()
+
+
+def watch(path="data"):
+  event_handler = MyHandler()
+  observer = Observer()
+  observer.schedule(event_handler, path, recursive=True)
+  observer.start()
+
+
 if __name__ == '__main__':
   run()
+  watch("./tmp_data")
   server()
