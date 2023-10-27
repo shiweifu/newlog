@@ -10,10 +10,12 @@
   "author": "shiweifu <shiweifu@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@parcel/transformer-sass": "2.10.0",
     "parcel": "^2.10.0"
   },
   "dependencies": {
     "autoprefixer": "^10.4.16",
+    "github-markdown-css": "^5.3.0",
     "postcss-cli": "^10.1.0",
     "tailwindcss": "^3.3.3"
   }
