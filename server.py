@@ -5,7 +5,7 @@ from flask import Flask, jsonify, render_template
 
 from app.engine import Engine
 
-engine = None
+engine: Engine | None = None
 
 
 def run():
@@ -21,12 +21,13 @@ def run():
 
 
 def server():
+  global engine
   #   run a flask web server
   app = Flask(__name__)
 
-  @app.route("/api/posts/<int:post_id>", methods=["GET"])
-  def get_post(post_id):
-    post = next((post for post in engine._posts if post.id == post_id), None)
+  @app.route("/api/posts/<string:slug>", methods=["GET"])
+  def get_post(slug):
+    post = engine.get_post(slug)
     if post:
       return jsonify(dict(post))
     else:
@@ -39,11 +40,19 @@ def server():
 
   @app.route("/api/posts", methods=["GET"])
   def get_posts():
-    return jsonify([dict(post) for post in engine._posts])
+    return jsonify([dict(post) for post in engine.get_posts()])
 
   @app.route("/")
   def index():
-    return render_template("index.html", posts=engine.get_posts())
+    return render_template("index.html", categories=engine.get_categories())
+
+  @app.route("/posts/<string:category>/<string:slug>", methods=["GET"])
+  def get_post_page(category, slug):
+    post = engine.get_post(slug, category)
+    if post:
+      return render_template("post.html", post=post)
+    else:
+      return jsonify({"error": "文章不存在"}), 404
 
   app.run(debug=True, port=7000)
 

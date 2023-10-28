@@ -48,10 +48,10 @@ class Engine:
   def _reload_categories_and_posts(self):
     # 遍历所有 posts，将文章数据添加到分类和文章数据中
     for post in self._posts:
-      if post.get_category() in self._categories_and_posts.keys():
-        self._categories_and_posts[post.get_category()].append(post)
+      if post.category() in self._categories_and_posts.keys():
+        self._categories_and_posts[post.category()].append(post)
       else:
-        self._categories_and_posts[post.get_category()] = [post]
+        self._categories_and_posts[post.category()] = [post]
 
     #  将分类和文章数据转换为 Category 对象
     categories = []
@@ -74,8 +74,15 @@ class Engine:
   def categories_and_posts(self):
     return self._categories_and_posts
 
-  def get_post(self, post_id):
-    post = next((post for post in self._posts if post.id == post_id), None)
+  def get_post(self, slug, category=""):
+    if category != "":
+      post = next((post for post in self.categories_and_posts()[category] if post.slug == slug), None)
+      if post:
+        return post
+      else:
+        return None
+
+    post = next((post for post in self._posts if post.slug == slug), None)
     if post:
       return post
     else:

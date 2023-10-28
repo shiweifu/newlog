@@ -1,7 +1,8 @@
 import datetime
-
 import markdown2
 import os
+from pypinyin import lazy_pinyin
+from markupsafe import Markup
 
 
 class Post:
@@ -16,6 +17,15 @@ class Post:
     # 解析文章内容，markdown 转换为 html
     self._parse_post()
 
+  def __str__(self):
+    return f"<Post {self._post_path}>"
+
+  def __dict__(self):
+    return self.serialize()
+
+  def __iter__(self):
+    return iter(self.serialize().items())
+
   def _check(self):
     if not os.path.exists(self._post_path):
       raise Exception('文件不存在')
@@ -23,6 +33,14 @@ class Post:
     if not os.path.isfile(self._post_path):
       raise Exception('不是文件')
 
+  @property
+  def html_content_render(self):
+    """
+    返回文章的 markdown 转换为 html 的内容
+    """
+    return Markup(self._html)
+
+  @property
   def html_content(self):
     """
     返回文章的 markdown 转换为 html 的内容
@@ -58,6 +76,9 @@ class Post:
     frontmatter["title"] = os.path.basename(self._post_path).replace(".md", "")
     frontmatter["date"] = datetime.datetime.now().strftime("%Y-%m-%d")
     frontmatter["category"] = self._local_category
+    pinyin_title = lazy_pinyin(frontmatter["title"])
+    slug = "-".join(pinyin_title)
+    frontmatter["slug"] = slug
 
     if len(content_parts) > 2 and content_parts[0].strip() == "":
       # 读取 frontmatter
@@ -79,30 +100,31 @@ class Post:
     self._raw_md = content
     self._html = markdown2.markdown(content)
 
-  def __str__(self):
-    return f"<Post {self._post_path}>"
-
   def serialize(self):
     return {
       'post_path': self._post_path,
-      'category': self.get_category(),
-      'date': self._frontmatter.get('date', ''),
-      'title': self.get_title(),
+      'category': self.category(),
+      'date': self.date,
+      'title': self.title,
       'html': self._html,
       'raw_md': self._raw_md
     }
 
-  def get_url(self):
-    return f"/posts/{self.get_category()}/{os.path.basename(self._post_path).replace('.md', '')}"
-
-  def get_title(self):
+  @property
+  def title(self):
     return self._frontmatter.get('title', '')
 
-  def get_category(self):
+  def category(self):
     return self._frontmatter.get('category', '')
 
-  def __dict__(self):
-    return self.serialize()
+  @property
+  def date(self):
+    return self._frontmatter.get('date', '')
 
-  def __iter__(self):
-    return iter(self.serialize().items())
+  @property
+  def slug(self):
+    return self._frontmatter.get('slug', '')
+
+  @property
+  def path(self):
+    return f"/posts/{self.category()}/{self.slug}"
