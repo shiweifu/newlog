@@ -6,7 +6,7 @@
   {#  {{ 遍历对应分类的 posts }}#}
   {% for post in category.posts %}
     <li class="nav-item">
-      <a class="nav-link" href="{{ post.get_url() }}">{{ post.get_title() }}</a>
+      <a class="nav-link" href="{{ post.get_url() }}">{{ post.title }}</a>
     </li>
   {% endfor %}
 {% endfor %}
