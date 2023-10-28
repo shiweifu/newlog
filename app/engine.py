@@ -1,12 +1,14 @@
 import os
 import yaml
 
+from models.category import Category
 from models.post import Post
 
 
 class Engine:
   def __init__(self, data_path='data'):
     self._categories = []
+    self._category_titles = []
     self._posts = []
     self._config = {}
     # key: category, value: posts
@@ -30,41 +32,6 @@ class Engine:
         self._config = cfg
         print("asdf")
 
-  def categories(self):
-    return self._categories
-
-  def posts(self):
-    return self._posts
-
-  def categories_and_posts(self):
-    return self._categories_and_posts
-
-  def get_post(self, post_id):
-    post = next((post for post in self._posts if post.id == post_id), None)
-    if post:
-      return post
-    else:
-      return None
-
-  def generate_blog_data(self):
-    # 遍历分类目录，生成分类数据，data下的所有文件夹，均为分类
-    for category_name in os.listdir(self._data_path):
-      self._categories.append(category_name)
-      category_path = self._data_path + "/" + category_name
-      if os.path.isdir(category_path):
-        # 便利目录下的文件
-        for post_name in os.listdir(category_path):
-          if post_name.endswith(".md"):
-            # 生成文章数据
-            full_post_path = category_path + "/" + post_name
-            post = Post(full_post_path, category_name)
-            # 将文章数据添加到分类数据中
-            self._posts.append(post)
-          else:
-            # TODO 改为打日志
-            print("文件不存在")
-    self._reload_categories_and_posts()
-
   def _check(self):
     pass
 
@@ -81,8 +48,53 @@ class Engine:
   def _reload_categories_and_posts(self):
     # 遍历所有 posts，将文章数据添加到分类和文章数据中
     for post in self._posts:
-      if post.category() in self._categories_and_posts.keys():
-        self._categories_and_posts[post.category()].append(post)
+      if post.get_category() in self._categories_and_posts.keys():
+        self._categories_and_posts[post.get_category()].append(post)
       else:
-        self._categories_and_posts[post.category()] = [post]
-    self._categories = list(self._categories_and_posts.keys())
+        self._categories_and_posts[post.get_category()] = [post]
+
+    #  将分类和文章数据转换为 Category 对象
+    categories = []
+    for category_name in self._categories_and_posts.keys():
+      tmp_category = Category(category_name, self._categories_and_posts[category_name])
+      categories.append(tmp_category)
+
+    self._categories = categories
+    self._category_titles = list(self._categories_and_posts.keys())
+
+  def get_categories(self):
+    return self._categories
+
+  def get_category_titles(self):
+    return self._category_titles
+
+  def get_posts(self):
+    return self._posts
+
+  def categories_and_posts(self):
+    return self._categories_and_posts
+
+  def get_post(self, post_id):
+    post = next((post for post in self._posts if post.id == post_id), None)
+    if post:
+      return post
+    else:
+      return None
+
+  def generate_blog_data(self):
+    # 遍历分类目录，生成分类数据，data下的所有文件夹，均为分类
+    for category_name in os.listdir(self._data_path):
+      category_path = self._data_path + "/" + category_name
+      if os.path.isdir(category_path):
+        # 便利目录下的文件
+        for post_name in os.listdir(category_path):
+          if post_name.endswith(".md"):
+            # 生成文章数据
+            full_post_path = category_path + "/" + post_name
+            post = Post(full_post_path, category_name)
+            # 将文章数据添加到分类数据中
+            self._posts.append(post)
+          else:
+            # TODO 改为打日志
+            print("文件不存在")
+    self._reload_categories_and_posts()

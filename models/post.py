@@ -85,20 +85,20 @@ class Post:
   def serialize(self):
     return {
       'post_path': self._post_path,
-      'category': self.category(),
+      'category': self.get_category(),
       'date': self._frontmatter.get('date', ''),
-      'title': self.title(),
+      'title': self.get_title(),
       'html': self._html,
       'raw_md': self._raw_md
     }
 
-  def url(self):
-    return f"/posts/{self.category()}/{os.path.basename(self._post_path).replace('.md', '')}"
+  def get_url(self):
+    return f"/posts/{self.get_category()}/{os.path.basename(self._post_path).replace('.md', '')}"
 
-  def title(self):
+  def get_title(self):
     return self._frontmatter.get('title', '')
 
-  def category(self):
+  def get_category(self):
     return self._frontmatter.get('category', '')
 
   def __dict__(self):

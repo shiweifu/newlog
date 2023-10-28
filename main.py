@@ -1,4 +1,5 @@
-import run
+import server
 
 if __name__ == '__main__':
-  app.run()
+  # TODO 增加读取终端参数
+  server.run()

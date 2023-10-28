@@ -3,9 +3,9 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 from flask import Flask, jsonify, render_template
 
-from lib.engine import Engine
+from app.engine import Engine
 
-engine: Engine
+engine = None
 
 
 def run():
@@ -14,6 +14,7 @@ def run():
     engine = Engine("tmp_data")
   except Exception as e:
     print(e)
+    exit(1)
 
   watch("./tmp_data")
   server()
@@ -34,8 +35,7 @@ def server():
   @app.route("/archive", methods=["GET"])
   def archive():
     return render_template("archive.html",
-                           categories=engine.categories(),
-                           categories_and_posts=engine.categories_and_posts())
+                           categories=engine.get_categories())
 
   @app.route("/api/posts", methods=["GET"])
   def get_posts():
@@ -43,9 +43,9 @@ def server():
 
   @app.route("/")
   def index():
-    return render_template("index.html", posts=engine._posts)
+    return render_template("index.html", posts=engine.get_posts())
 
-  app.run(debug=True, port=5050)
+  app.run(debug=True, port=7000)
 
 
 class MyHandler(FileSystemEventHandler):
