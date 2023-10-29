@@ -13,7 +13,8 @@ class Engine:
     self._config = {}
     # key: category, value: posts
     self._categories_and_posts = {}
-    self._data_path = data_path + "/posts"
+    self._posts_path = data_path + "/posts"
+    self._data_path = data_path
     self._check()
     self._load_config()
     self.generate_blog_data()
@@ -21,16 +22,14 @@ class Engine:
   def _load_config(self):
     # 读取 config.yaml 文件，解析其中内容作为配置
     cfg_path = self._data_path + "/config.yaml"
+    if not cfg_path.startswith("/"):
+      cfg_path = f"{cfg_path}"
     if os.path.exists(cfg_path):
       with open(cfg_path, 'r', encoding='utf-8') as f:
         cfg_content = f.read().strip()
         # 使用 pyyaml 库解析 yaml 文件
         cfg = yaml.load(cfg_content, Loader=yaml.FullLoader)
-        cfg["site_title"] = cfg["site_title"] if "site_title" in cfg.keys() else "My Blog"
-        cfg["site_description"] = cfg["site_description"] if "site_description" in cfg.keys() else ""
-
         self._config = cfg
-        print("asdf")
 
   def _check(self):
     pass
@@ -90,8 +89,8 @@ class Engine:
 
   def generate_blog_data(self):
     # 遍历分类目录，生成分类数据，data下的所有文件夹，均为分类
-    for category_name in os.listdir(self._data_path):
-      category_path = self._data_path + "/" + category_name
+    for category_name in os.listdir(self._posts_path):
+      category_path = self._posts_path + "/" + category_name
       if os.path.isdir(category_path):
         # 便利目录下的文件
         for post_name in os.listdir(category_path):
@@ -105,3 +104,7 @@ class Engine:
             # TODO 改为打日志
             print("文件不存在")
     self._reload_categories_and_posts()
+
+  @property
+  def config(self):
+    return self._config

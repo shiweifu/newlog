@@ -11,7 +11,7 @@ engine: Engine | None = None
 def run():
   global engine
   try:
-    engine = Engine("tmp_data")
+    engine = Engine("./tmp_data")
   except Exception as e:
     print(e)
     exit(1)
@@ -33,14 +33,14 @@ def server():
     else:
       return jsonify({"error": "文章不存在"}), 404
 
+  @app.route("/api/posts", methods=["GET"])
+  def get_posts():
+    return jsonify([dict(post) for post in engine.get_posts()])
+
   @app.route("/archive", methods=["GET"])
   def archive():
     return render_template("archive.html",
                            categories=engine.get_categories())
-
-  @app.route("/api/posts", methods=["GET"])
-  def get_posts():
-    return jsonify([dict(post) for post in engine.get_posts()])
 
   @app.route("/")
   def index():
