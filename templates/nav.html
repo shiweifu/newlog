@@ -1,0 +1,22 @@
+<div class="mt-4 mb-4">
+  <nav class="container">
+    <div class="logo text-xl font-bold">
+      <a href="/">{{ title or default_title }}</a>
+    </div>
+    <div>
+      <ul class="inline-block">
+        {% for page in pages %}
+          {% if page.title == "title" %}
+            <li class="inline-block ml-4 nav-link is-active">
+              {#            <a href="{{ .Path }}">{{ .Title }}</a>#}
+            </li>
+          {% else %}
+            <li class="inline-block ml-4 nav-link">
+              {#              <a href="{{ .Path }}">{{ .Title }}</a>#}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
+</div>
