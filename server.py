@@ -26,22 +26,11 @@ def server():
   app = Flask(__name__)
 
   @app.context_processor
-  def inject_title():
-    # 在此处获取默认标题值的逻辑，可以从配置文件中读取，或者动态生成
+  def inject_globals():
     default_title = engine.config["site"]["title"]
-    # 返回一个字典，包含要在所有模板中使用的默认标题
-    return {'default_title': default_title}
-
-  @app.context_processor
-  def inject_nav_links():
-    # 在此处获取默认标题值的逻辑，可以从配置文件中读取，或者动态生成
     nav_links = engine.config["nav"] or []
-    # 返回一个字典，包含要在所有模板中使用的默认标题
-    return {'nav_links': nav_links}
-
-  @app.context_processor
-  def inject_current_path():
-    return {'current_path': request.path}
+    current_path = request.path
+    return {'default_title': default_title, 'nav_links': nav_links, 'current_path': current_path}
 
   @app.route("/api/posts/<string:slug>", methods=["GET"])
   def get_post(slug):
