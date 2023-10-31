@@ -46,12 +46,15 @@ def server():
 
   @app.route("/archive", methods=["GET"])
   def archive():
+    posts = engine.get_posts()
     return render_template("archive.html",
-                           categories=engine.get_categories())
+                           posts=posts,
+                           n="归档")
 
   @app.route("/")
   def index():
-    return render_template("index.html", categories=engine.get_categories())
+    return render_template("index.html",
+                           categories=engine.get_categories())
 
   @app.route("/posts/<string:category>/<string:slug>", methods=["GET"])
   def get_post_page(category, slug):

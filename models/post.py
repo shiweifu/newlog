@@ -33,20 +33,6 @@ class Post:
     if not os.path.isfile(self._post_path):
       raise Exception('不是文件')
 
-  @property
-  def html_content_render(self):
-    """
-    返回文章的 markdown 转换为 html 的内容
-    """
-    return Markup(self._html)
-
-  @property
-  def html_content(self):
-    """
-    返回文章的 markdown 转换为 html 的内容
-    """
-    return self._html
-
   def raw_md(self):
     """
     返回文章的 markdown 内容
@@ -128,3 +114,17 @@ class Post:
   @property
   def path(self):
     return f"/posts/{self.category()}/{self.slug}"
+
+  @property
+  def html_content_render(self):
+    """
+    返回文章的 markdown 转换为 html 的内容
+    """
+    return Markup(self._html)
+
+  @property
+  def html_content(self):
+    """
+    返回文章的 markdown 转换为 html 的内容
+    """
+    return self._html
