@@ -5,14 +5,14 @@
     </div>
     <div>
       <ul class="inline-block">
-        {% for page in pages %}
-          {% if page.title == "title" %}
+        {% for link in nav_links %}
+          {% if link.url == current_path %}
             <li class="inline-block ml-4 nav-link is-active">
-              {#            <a href="{{ .Path }}">{{ .Title }}</a>#}
+              <a href="{{ link.url }}">{{ link.name }}</a>
             </li>
           {% else %}
             <li class="inline-block ml-4 nav-link">
-              {#              <a href="{{ .Path }}">{{ .Title }}</a>#}
+              <a href="{{ link.url }}">{{ link.name }}</a>
             </li>
           {% endif %}
         {% endfor %}
