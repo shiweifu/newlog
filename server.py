@@ -64,6 +64,14 @@ def server():
     else:
       return jsonify({"error": "文章不存在"}), 404
 
+  @app.route("/page/<string:slug>", methods=["GET"])
+  def get_page(slug):
+    page = engine.get_page(slug)
+    if page:
+      return render_template("page.html", page=page)
+    else:
+      return jsonify({"error": "文章不存在"}), 404
+
   app.run(debug=True, port=7000)
 
 

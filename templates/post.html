@@ -1,8 +1,6 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
-
   <div class="container">
     <div class="mb-4 border-b pb-4">
       <h1 class="text-xl text-center">{{ post.title }}</h1>
@@ -11,6 +9,4 @@
 
     <div class="prose max-w-none markdown-body mt-4">{{ post.html_content_render }}</div>
   </div>
-
-
 {% endblock %}

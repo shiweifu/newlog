@@ -1,5 +1,8 @@
 import os
+
+import markdown2
 import yaml
+from markupsafe import Markup
 
 from models.category import Category
 from models.post import Post
@@ -10,6 +13,7 @@ class Engine:
     self._categories = []
     self._category_titles = []
     self._posts = []
+    self._pages = []
     self._config = {}
     # key: category, value: posts
     self._categories_and_posts = {}
@@ -38,13 +42,14 @@ class Engine:
     self._categories = []
     self._posts = []
     self._categories_and_posts = {}
+    self._pages = []
 
   def reload_data(self):
     self._clean()
     self._load_config()
     self.generate_blog_data()
 
-  def _reload_categories_and_posts(self):
+  def _reload_blog_data(self):
     # 遍历所有 posts，将文章数据添加到分类和文章数据中
     for post in self._posts:
       if post.category() in self._categories_and_posts.keys():
@@ -60,6 +65,23 @@ class Engine:
 
     self._categories = categories
     self._category_titles = list(self._categories_and_posts.keys())
+
+    pages = []
+    pages_path = self._data_path + "/pages"
+    if os.path.exists(pages_path):
+      for page_name in os.listdir(pages_path):
+        if page_name.endswith(".md"):
+          page_path = pages_path + "/" + page_name
+          with open(page_path, 'r', encoding='utf-8') as f:
+            content = f.read().strip()
+            # 转换为 html
+            html_content = Markup(markdown2.markdown(content))
+            name = os.path.basename(page_name).split('.')[0]
+            pages.append({
+              "name": name,
+              "html_content": html_content
+            })
+    self._pages = pages
 
   def get_categories(self):
     return self._categories
@@ -103,7 +125,13 @@ class Engine:
           else:
             # TODO 改为打日志
             print("文件不存在")
-    self._reload_categories_and_posts()
+    self._reload_blog_data()
+
+  def get_page(self, slug):
+    for page in self._pages:
+      if page["name"] == slug:
+        return page
+    return None
 
   @property
   def config(self):
