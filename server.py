@@ -30,7 +30,12 @@ def server():
     default_title = engine.config["site"]["title"]
     nav_links = engine.config["nav"] or []
     current_path = request.path
-    return {'default_title': default_title, 'nav_links': nav_links, 'current_path': current_path}
+    return {'default_title': default_title,
+            'nav_links': nav_links,
+            'current_path': current_path,
+            "show_nav": True,
+            "show_footer": True
+            }
 
   @app.route("/api/posts/<string:slug>", methods=["GET"])
   def get_post(slug):
@@ -68,7 +73,10 @@ def server():
   def get_page(slug):
     page = engine.get_page(slug)
     if page:
-      return render_template("page.html", page=page)
+      return render_template("page.html",
+                             page=page,
+                             show_nav=page.show_nav,
+                             show_footer=page.show_footer)
     else:
       return jsonify({"error": "文章不存在"}), 404
 

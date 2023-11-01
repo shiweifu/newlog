@@ -132,7 +132,7 @@ class Engine:
 
   def get_page(self, slug):
     for page in self._pages:
-      if page["name"] == slug:
+      if page.page_name == slug:
         return page
     return None
 

@@ -124,10 +124,12 @@ class Page:
 
   @property
   def show_nav(self):
-    return self._frontmatter.get('show_nav', 'true') == 'true'
+    f = self._frontmatter.get('show_nav', 'true') == 'true'
+    return f
 
   def show_footer(self):
-    return self._frontmatter.get('show_footer', 'true') == 'true'
+    f = self._frontmatter.get('show_footer', 'true') == 'true'
+    return f
 
   @property
   def page_name(self):
