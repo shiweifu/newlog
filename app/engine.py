@@ -5,6 +5,7 @@ import yaml
 from markupsafe import Markup
 
 from models.category import Category
+from models.page import Page
 from models.post import Post
 
 
@@ -72,15 +73,17 @@ class Engine:
       for page_name in os.listdir(pages_path):
         if page_name.endswith(".md"):
           page_path = pages_path + "/" + page_name
-          with open(page_path, 'r', encoding='utf-8') as f:
-            content = f.read().strip()
-            # 转换为 html
-            html_content = Markup(markdown2.markdown(content))
-            name = os.path.basename(page_name).split('.')[0]
-            pages.append({
-              "name": name,
-              "html_content": html_content
-            })
+          page = Page(page_path)
+          pages.append(page)
+          # with open(page_path, 'r', encoding='utf-8') as f:
+          #   content = f.read().strip()
+          #   # 转换为 html
+          #   html_content = Markup(markdown2.markdown(content))
+          #   name = os.path.basename(page_name).split('.')[0]
+          #   pages.append({
+          #     "name": name,
+          #     "html_content": html_content
+          #   })
     self._pages = pages
 
   def get_categories(self):

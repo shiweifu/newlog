@@ -11,7 +11,10 @@
 <header>
   <!-- 页头内容 -->
   {# 引入 header #}
-  {% include 'partials/nav.html' %}
+
+  {% if show_nav %}
+    {% include 'partials/nav.html' %}
+  {% endif %}
 </header>
 
 <main>
@@ -20,9 +23,9 @@
 </main>
 
 <footer>
-  <!-- 页脚内容 -->
-  {# 引入 footer #}
-  {% include 'partials/footer.html' %}
+  {% if show_footer %}
+    {% include 'partials/footer.html' %}
+  {% endif %}
 </footer>
 </body>
 </html>
