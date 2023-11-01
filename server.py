@@ -72,6 +72,7 @@ def server():
   @app.route("/page/<string:slug>", methods=["GET"])
   def get_page(slug):
     page = engine.get_page(slug)
+    print(page, page.show_footer, page.show_nav)
     if page:
       return render_template("page.html",
                              page=page,

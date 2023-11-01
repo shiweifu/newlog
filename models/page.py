@@ -127,8 +127,10 @@ class Page:
     f = self._frontmatter.get('show_nav', 'true') == 'true'
     return f
 
+  @property
   def show_footer(self):
     f = self._frontmatter.get('show_footer', 'true') == 'true'
+    print("show_footeR: ", f)
     return f
 
   @property
