@@ -9,9 +9,10 @@ from models.post import Post
 
 
 class Engine:
-  def __init__(self, data_path='data'):
+  def __init__(self, root_path, data_path='data'):
     self._custom_css_content = ""
     self._custom_js_content = ""
+    self._root_path = root_path
     self._categories = []
     self._category_titles = []
     self._posts = []
@@ -149,3 +150,21 @@ class Engine:
   @property
   def custom_js(self):
     return Markup(self._custom_js_content)
+
+  @property
+  def static_path(self):
+    theme = self.config.get("site").get("theme", "default")
+    if theme == "default":
+      # 当前项目下的 static 目录
+      return self._root_path + "/static"
+    else:
+      return self._data_path + "/themes/" + theme + "/static"
+
+  @property
+  def template_path(self):
+    theme = self.config.get("site").get("theme", "default")
+    if theme == "default":
+      # 当前项目下的 templates 目录
+      return self._root_path + "/templates"
+    else:
+      return self._data_path + "/themes/" + theme + "/templates"

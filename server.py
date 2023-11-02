@@ -10,8 +10,9 @@ engine: Engine | None = None
 
 def run():
   global engine
+  root_path = "./"
   try:
-    engine = Engine("./tmp_data")
+    engine = Engine(root_path, "./tmp_data")
   except Exception as e:
     print(e)
     exit(1)
@@ -23,7 +24,9 @@ def run():
 def server():
   global engine
   #   run a flask web server
-  app = Flask(__name__)
+  print("static folder: ", engine.static_path)
+  print("template folder: ", engine.template_path)
+  app = Flask(__name__, static_folder=engine.static_path, template_folder=engine.template_path)
 
   @app.context_processor
   def inject_globals():
