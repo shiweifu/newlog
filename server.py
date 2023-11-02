@@ -34,7 +34,9 @@ def server():
             'nav_links': nav_links,
             'current_path': current_path,
             "show_nav": True,
-            "show_footer": True
+            "show_footer": True,
+            "custom_css": engine.custom_css,
+            "custom_js": engine.custom_js,
             }
 
   @app.route("/api/posts/<string:slug>", methods=["GET"])

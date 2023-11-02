@@ -6,12 +6,15 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
   <script src="{{ url_for('static', filename='index.js') }}"></script>
 
+  <style>
+    {{ custom_css }}
+  </style>
+
 </head>
 <body>
 <header>
   <!-- 页头内容 -->
   {# 引入 header #}
-
   {% if show_nav %}
     {% include 'partials/nav.html' %}
   {% endif %}
@@ -27,7 +30,9 @@
     {% include 'partials/footer.html' %}
   {% endif %}
 </footer>
+
+<script>
+  {{ custom_js }}
+</script>
 </body>
 </html>
-
-

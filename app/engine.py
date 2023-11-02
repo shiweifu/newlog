@@ -3,7 +3,6 @@ import os
 import markdown2
 import yaml
 from markupsafe import Markup
-
 from models.category import Category
 from models.page import Page
 from models.post import Post
@@ -11,6 +10,8 @@ from models.post import Post
 
 class Engine:
   def __init__(self, data_path='data'):
+    self._custom_css_content = ""
+    self._custom_js_content = ""
     self._categories = []
     self._category_titles = []
     self._posts = []
@@ -75,15 +76,6 @@ class Engine:
           page_path = pages_path + "/" + page_name
           page = Page(page_path)
           pages.append(page)
-          # with open(page_path, 'r', encoding='utf-8') as f:
-          #   content = f.read().strip()
-          #   # 转换为 html
-          #   html_content = Markup(markdown2.markdown(content))
-          #   name = os.path.basename(page_name).split('.')[0]
-          #   pages.append({
-          #     "name": name,
-          #     "html_content": html_content
-          #   })
     self._pages = pages
 
   def get_categories(self):
@@ -129,6 +121,16 @@ class Engine:
             # TODO 改为打日志
             print("文件不存在")
     self._reload_blog_data()
+    # 读取 custom_css 文件
+    custom_css_path = self._data_path + "/custom.css"
+    if os.path.exists(custom_css_path):
+      with open(custom_css_path, 'r', encoding='utf-8') as f:
+        self._custom_css_content = f.read().strip()
+    # 读取 custom_js 文件
+    custom_js_path = self._data_path + "/custom.js"
+    if os.path.exists(custom_js_path):
+      with open(custom_js_path, 'r', encoding='utf-8') as f:
+        self._custom_js_content = f.read().strip()
 
   def get_page(self, slug):
     for page in self._pages:
@@ -139,3 +141,11 @@ class Engine:
   @property
   def config(self):
     return self._config
+
+  @property
+  def custom_css(self):
+    return Markup(self._custom_css_content)
+
+  @property
+  def custom_js(self):
+    return Markup(self._custom_js_content)
